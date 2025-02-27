@@ -36,6 +36,8 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         (20, 29): {"M": [(50, 10), (45, 9), (40, 8), (35, 7), (30, 6), (0, 4)], "F": [(40, 10), (35, 9), (30, 8), (25, 7), (20, 6), (0, 4)]},
         (30, 39): {"M": [(45, 10), (40, 9), (35, 8), (30, 7), (25, 6), (0, 4)], "F": [(35, 10), (30, 9), (25, 8), (20, 7), (15, 6), (0, 4)]},
         (40, 49): {"M": [(40, 10), (35, 9), (30, 8), (25, 7), (20, 6), (0, 4)], "F": [(30, 10), (25, 9), (20, 8), (15, 7), (10, 6), (0, 4)]}
+        (50, 53): {"M": [(35, 10), (30, 9), (25, 8), (20, 7), (15, 6), (0, 4)], "F": [(25, 10), (20, 9), (15, 8), (10, 7), (5, 6), (0, 4)]}
+
     }
     
     tabela_flexao_tronco = tabela_flexao_braco
@@ -43,6 +45,8 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         (20, 29): {"M": [(3000, 10), (2800, 9), (2600, 8), (2400, 7), (2200, 6), (0, 4)], "F": [(2700, 10), (2500, 9), (2300, 8), (2100, 7), (1900, 6), (0, 4)]},
         (30, 39): {"M": [(2800, 10), (2600, 9), (2400, 8), (2200, 7), (2000, 6), (0, 4)], "F": [(2500, 10), (2300, 9), (2100, 8), (1900, 7), (1700, 6), (0, 4)]},
         (40, 49): {"M": [(2600, 10), (2400, 9), (2200, 8), (2000, 7), (1800, 6), (0, 4)], "F": [(2300, 10), (2100, 9), (1900, 8), (1700, 7), (1500, 6), (0, 4)]}
+        (40, 53): {"M": [(2600, 10), (2400, 9), (2200, 8), (2000, 7), (1800, 6), (0, 4)], "F": [(2300, 10), (2100, 9), (1900, 8), (1700, 7), (1500, 6), (0, 4)]}
+
     }
     
     # Cálculo dos pontos para cintura
@@ -84,8 +88,9 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
 # Interface do Streamlit
 st.title("Calculadora TACF - FAB")
 st.write("Pontuação baseada na Tabela de Pontos do Anexo VI da NSCA 54-3 de 2025")
-st.download_button("Baixar NSCA 54-3", "./NSCA_54-3.pdf")
-
+#st.download_button("Baixar NSCA 54-3", "./NSCA_54-3.pdf")
+# Botão para baixar NSCA 54-3
+st.markdown('[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)', unsafe_allow_html=True)
 # Entradas do usuário
 sexo = st.selectbox("Sexo", ["M", "F"])
 idade = st.number_input("Idade", min_value=20, max_value=49, step=1)
