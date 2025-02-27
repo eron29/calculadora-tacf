@@ -45,7 +45,16 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         (40, 49): {"M": [(2600, 10), (2400, 9), (2200, 8), (2000, 7), (1800, 6), (0, 4)], "F": [(2300, 10), (2100, 9), (1900, 8), (1700, 7), (1500, 6), (0, 4)]}
     }
     
-    # Cálculo dos pontos
+    # Cálculo dos pontos para cintura
+    def get_pontos_cintura(tabela, sexo, valor):
+        for limite, pontos in tabela[sexo]:
+            if valor <= limite:
+                return pontos
+        return 0
+
+    pontos_cintura = get_pontos_cintura(tabela_cintura, sexo, cintura)
+
+    # Cálculo dos pontos para os outros testes
     def get_pontos(tabela, idade, sexo, valor):
         for faixa, pontuacoes in tabela.items():
             if faixa[0] <= idade <= faixa[1]:
@@ -54,7 +63,6 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
                         return pontos
         return 0
     
-    pontos_cintura = get_pontos(tabela_cintura, sexo, cintura)
     pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
     pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
     pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
