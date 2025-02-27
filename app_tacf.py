@@ -45,17 +45,46 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         (40, 49): {"M": [(2600, 10), (2400, 9), (2200, 8), (2000, 7), (1800, 6), (0, 4)], "F": [(2300, 10), (2100, 9), (1900, 8), (1700, 7), (1500, 6), (0, 4)]}
     }
     
-    conceito_global = "Muito Bom (MB)"  # Simulação de cálculo
-    grau_final = 8.0  # Simulação de cálculo
+    # Cálculo dos pontos para cintura
+    def get_pontos_cintura(tabela, sexo, valor):
+        for limite, pontos in tabela[sexo]:
+            if valor <= limite:
+                return pontos
+        return 0
+
+    pontos_cintura = get_pontos_cintura(tabela_cintura, sexo, cintura)
+
+    # Cálculo dos pontos para os outros testes
+    def get_pontos(tabela, idade, sexo, valor):
+        for faixa, pontuacoes in tabela.items():
+            if faixa[0] <= idade <= faixa[1]:
+                for limite, pontos in pontuacoes[sexo]:
+                    if valor >= limite:
+                        return pontos
+        return 0
+    
+    pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
+    pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
+    pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
+    
+    grau_final = (pontos_cintura + pontos_flexao_braco + pontos_flexao_tronco + pontos_corrida) / 4
+    
+    conceito_tabela = {
+        (9, float("inf")): "Excelente (E)",
+        (7, 9): "Muito Bom (MB)",
+        (5, 7): "Bom (B)",
+        (3, 5): "Satisfatório (S)",
+        (0, 3): "Insatisfatório (I)"
+    }
+    
+    conceito_global = next(v for k, v in conceito_tabela.items() if k[0] <= grau_final < k[1])
+    
     return grau_final, conceito_global
 
 # Interface do Streamlit
 st.title("Calculadora TACF - FAB")
 st.write("Pontuação baseada na Tabela de Pontos do Anexo VI da NSCA 54-3 de 2025")
-st.markdown(
-    '<a href="https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678" target="_blank">Baixar NSCA 54-3</a>',
-    unsafe_allow_html=True
-)
+st.download_button("Baixar NSCA 54-3", "./NSCA_54-3.pdf")
 
 # Entradas do usuário
 sexo = st.selectbox("Sexo", ["M", "F"])
