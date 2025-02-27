@@ -41,18 +41,6 @@ flexao_braco = st.number_input("Flexão de Braço", min_value=0, max_value=100, 
 flexao_tronco = st.number_input("Flexão de Tronco", min_value=0, max_value=100, step=1)
 corrida = st.number_input("Distância Corrida (m)", min_value=0, max_value=5000, step=10)
 
-if st.button("Calcular"):
-    grau_final, conceito_global = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
-    st.write(f"**Grau Final:** {grau_final:.2f}")
-    st.write(f"**Conceito Global:** {conceito_global}")
-    st.markdown("## VOCÊ LUTA COMO TREINOU!  SELVA BRASIL!")
-
-# Contador de acessos
-if "contador" not in st.session_state:
-    st.session_state["contador"] = 0
-st.session_state["contador"] += 1
-st.write(f"Número de acessos: {st.session_state['contador']}")
-
 # Função para calcular o TACF
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
     """
