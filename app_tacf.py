@@ -76,6 +76,18 @@ def calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida):
 
     return grau_final
 
+def determinar_conceito(grau_final):
+    if grau_final >= 9.0:
+        return "Excelente (E)"
+    elif grau_final >= 7.0:
+        return "Muito Bom (MB)"
+    elif grau_final >= 5.0:
+        return "Bom (B)"
+    elif grau_final >= 3.0:
+        return "Satisfatório (S)"
+    else:
+        return "Insatisfatório (I)"
+
 st.title("Calculadora TACF - FAB")
 st.write("Pontuação baseada na Tabela do Anexo VI da NSCA 54-3.")
 st.markdown("[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)", unsafe_allow_html=True)
@@ -91,5 +103,9 @@ with st.form("tacf_form"):
 
 if submit:
     grau_final = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
+    conceito_global = determinar_conceito(grau_final)
+
     st.success(f"**Grau Final:** {grau_final:.2f}")
+    st.info(f"**Conceito Global:** {conceito_global}")
+    
     st.markdown("### **Você luta como treina!** 💪🔥")
