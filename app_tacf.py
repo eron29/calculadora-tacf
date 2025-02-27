@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Configuração do tema escuro
-st.set_page_config(page_title="Calculadora TACF", page_icon="✈", layout="centered")
+st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
 st.markdown(
     """
     <style>
@@ -74,9 +74,8 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
     return grau_final, conceito_global
 
 # Interface do Streamlit
-st.image("gladio_alado_fab.png", width=100)
-st.title("Calculadora TACF - Norma de Sistemas do Comando da Aeronáutica (NSCA 54-3 de 2024)")
-st.write("Pontuação baseada na Tabela de Pontos do Anexo VI")
+st.title("Calculadora TACF - FAB")
+st.write("Pontuação baseada na Tabela de Pontos do Anexo VI da NSCA 54-3 de 2025")
 st.download_button("Baixar NSCA 54-3", "./NSCA_54-3.pdf")
 
 # Entradas do usuário
