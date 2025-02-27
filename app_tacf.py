@@ -3,7 +3,7 @@ import streamlit as st
 # Configuração do tema escuro
 st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
 st.markdown(
-   ,
+  
     unsafe_allow_html=True
 )
 
