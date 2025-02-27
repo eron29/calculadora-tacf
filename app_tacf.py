@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 
 # Configuração do tema claro
-st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
-
 st.markdown(
     """
     <style>
@@ -24,13 +22,15 @@ st.markdown(
             border-radius: 5px !important;
             padding: 5px !important;
         }
+        /* Alteração do botão Calcular para fundo branco e texto preto */
         .stButton>button {
-            color: white !important;
-            background-color: #007BFF !important;
+            color: black !important;
+            background-color: white !important;
             border-radius: 10px !important;
-            border: none !important;
+            border: 2px solid #007BFF !important;
             padding: 10px !important;
             font-size: 16px !important;
+            font-weight: bold !important;
         }
         .stSuccess {
             background-color: #145A32 !important;
