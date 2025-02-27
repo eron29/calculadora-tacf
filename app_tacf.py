@@ -33,6 +33,26 @@ tema_selecionado = set_theme()
 st.write("Pontuação baseada na Tabela de Pontos do Anexo VI da NSCA 54-3 de 2025")
 st.markdown("[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)")
 
+# Entradas do usuário
+sexo = st.selectbox("Sexo", ["M", "F"])
+idade = st.number_input("Idade", min_value=20, max_value=49, step=1)
+cintura = st.number_input("Medição da Cintura (cm)", min_value=50.0, max_value=150.0, step=0.1)
+flexao_braco = st.number_input("Flexão de Braço", min_value=0, max_value=100, step=1)
+flexao_tronco = st.number_input("Flexão de Tronco", min_value=0, max_value=100, step=1)
+corrida = st.number_input("Distância Corrida (m)", min_value=0, max_value=5000, step=10)
+
+if st.button("Calcular"):
+    grau_final, conceito_global = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
+    st.write(f"**Grau Final:** {grau_final:.2f}")
+    st.write(f"**Conceito Global:** {conceito_global}")
+    st.markdown("## VOCÊ LUTA COMO TREINOU!  SELVA BRASIL!")
+
+# Contador de acessos
+if "contador" not in st.session_state:
+    st.session_state["contador"] = 0
+st.session_state["contador"] += 1
+st.write(f"Número de acessos: {st.session_state['contador']}")
+
 # Função para calcular o TACF
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
     """
@@ -65,7 +85,7 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
                         return pontos
         return 0
     
-    pontos_cintura = get_pontos(tabela_cintura, sexo, cintura)
+    pontos_cintura = get_pontos(tabela_cintura, idade, sexo, cintura)
     pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
     pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
     pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
