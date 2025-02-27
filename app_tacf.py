@@ -1,5 +1,26 @@
 import streamlit as st
 
+# Configuração do tema escuro
+st.set_page_config(page_title="Calculadora TACF", page_icon="✈", layout="centered")
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        .stButton>button {
+            color: white;
+            background-color: #6200ea;
+        }
+        .stNumberInput>div>input {
+            color: black;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Função para calcular o TACF
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
     """
@@ -24,6 +45,7 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         (40, 49): {"M": [(2600, 10), (2400, 9), (2200, 8), (2000, 7), (1800, 6), (0, 4)], "F": [(2300, 10), (2100, 9), (1900, 8), (1700, 7), (1500, 6), (0, 4)]}
     }
     
+    # Cálculo dos pontos
     def get_pontos(tabela, idade, sexo, valor):
         for faixa, pontuacoes in tabela.items():
             if faixa[0] <= idade <= faixa[1]:
@@ -32,13 +54,7 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
                         return pontos
         return 0
     
-    def get_pontos_cintura(tabela, sexo, valor):
-        for limite, pontos in tabela[sexo]:
-            if valor <= limite:
-                return pontos
-        return 0
-    
-    pontos_cintura = get_pontos_cintura(tabela_cintura, sexo, cintura)
+    pontos_cintura = get_pontos(tabela_cintura, sexo, cintura)
     pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
     pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
     pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
@@ -55,19 +71,15 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
     
     conceito_global = next(v for k, v in conceito_tabela.items() if k[0] <= grau_final < k[1])
     
-    return {
-        "Pontos Cintura": pontos_cintura,
-        "Pontos Flexão de Braço": pontos_flexao_braco,
-        "Pontos Flexão de Tronco": pontos_flexao_tronco,
-        "Pontos Corrida": pontos_corrida,
-        "Grau Final": grau_final,
-        "Conceito Global": conceito_global
-    }
+    return grau_final, conceito_global
 
 # Interface do Streamlit
-st.title("Calculadora TACF - NSCA 54-3 (2024)")
+st.image("gladio_alado_fab.png", width=100)
+st.title("Calculadora TACF - Norma de Sistemas do Comando da Aeronáutica (NSCA 54-3 de 2024)")
 st.write("Pontuação baseada na Tabela de Pontos do Anexo VI")
+st.download_button("Baixar NSCA 54-3", "./NSCA_54-3.pdf")
 
+# Entradas do usuário
 sexo = st.selectbox("Sexo", ["M", "F"])
 idade = st.number_input("Idade", min_value=20, max_value=49, step=1)
 cintura = st.number_input("Medição da Cintura (cm)", min_value=50.0, max_value=150.0, step=0.1)
@@ -76,13 +88,12 @@ flexao_tronco = st.number_input("Flexão de Tronco", min_value=0, max_value=100,
 corrida = st.number_input("Distância Corrida (m)", min_value=0, max_value=5000, step=10)
 
 if st.button("Calcular"):
-    resultado = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
-    st.write("### Resultados")
-    for chave, valor in resultado.items():
-        st.write(f"**{chave}:** {valor}")
+    grau_final, conceito_global = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
+    st.write(f"**Grau Final:** {grau_final:.2f}")
+    st.write(f"**Conceito Global:** {conceito_global}")
+    st.markdown("## VOCÊ LUTA COMO TREINOU!  SELVA BRASIL!")
 
 if "contador" not in st.session_state:
     st.session_state["contador"] = 0
 st.session_state["contador"] += 1
-
 st.write(f"Número de acessos: {st.session_state['contador']}")
