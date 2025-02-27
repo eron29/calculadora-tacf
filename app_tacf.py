@@ -3,26 +3,11 @@ import streamlit as st
 # Configuração do tema escuro
 st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
 st.markdown(
-    """
-    <style>
-        body {
-            background-color: #121212;
-            color: white;
-        }
-        .stButton>button {
-            color: white;
-            background-color: #6200ea;
-        }
-        .stNumberInput>div>input {
-            color: black;
-        }
-    </style>
-    """,
+   ,
     unsafe_allow_html=True
 )
 
 # Função para calcular o TACF
-
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
     """
     Calcula o Conceito Global do TACF de acordo com a Tabela de Pontos do Anexo VI da NSCA 54-3 (2024).
@@ -47,11 +32,27 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         (40, 53): {"M": [(2600, 10), (2400, 9), (2200, 8), (2000, 7), (1800, 6), (0, 4)], "F": [(2300, 10), (2100, 9), (1900, 8), (1700, 7), (1500, 6), (0, 4)]}
     }
     
-    faixa_idade = next(faixa for faixa in tabela_flexao_braco if faixa[0] <= idade <= faixa[1])
-    pontos_cintura = next(p for l, p in tabela_cintura[sexo] if cintura <= l)
-    pontos_flexao_braco = next(p for l, p in tabela_flexao_braco[faixa_idade][sexo] if flexao_braco >= l)
-    pontos_flexao_tronco = next(p for l, p in tabela_flexao_tronco[faixa_idade][sexo] if flexao_tronco >= l)
-    pontos_corrida = next(p for l, p in tabela_corrida[faixa_idade][sexo] if corrida >= l)
+    # Cálculo dos pontos para cintura
+    def get_pontos_cintura(tabela, sexo, valor):
+        for limite, pontos in tabela[sexo]:
+            if valor <= limite:
+                return pontos
+        return 0
+
+    pontos_cintura = get_pontos_cintura(tabela_cintura, sexo, cintura)
+
+    # Cálculo dos pontos para os outros testes
+    def get_pontos(tabela, idade, sexo, valor):
+        for faixa, pontuacoes in tabela.items():
+            if faixa[0] <= idade <= faixa[1]:
+                for limite, pontos in pontuacoes[sexo]:
+                    if valor >= limite:
+                        return pontos
+        return 0
+    
+    pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
+    pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
+    pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
     
     grau_final = (pontos_cintura + pontos_flexao_braco + pontos_flexao_tronco + pontos_corrida) / 4
     
@@ -66,6 +67,3 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
     conceito_global = next(v for k, v in conceito_tabela.items() if k[0] <= grau_final < k[1])
     
     return grau_final, conceito_global
-
-# Botão para baixar NSCA 54-3
-st.markdown('[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)', unsafe_allow_html=True)
