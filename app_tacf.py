@@ -8,30 +8,45 @@ st.markdown(
     """
     <style>
         .stApp {
-            background-color: #ffffff;
-            color: black;
+            background-color: #121212;
+            color: white;
         }
         .stTextInput>div>div>input, 
         .stNumberInput>div>div>input, 
         .stSelectbox>div>div>div {
-            color: black !important;
-            background-color: white !important;
-            border: 1px solid #ccc !important;
+            color: white !important;
+            background-color: #1e1e1e !important;
+            border: 1px solid #333 !important;
             border-radius: 5px !important;
             padding: 5px !important;
         }
         .stButton>button {
             color: white !important;
             background-color: #007BFF !important;
-            border-radius: 10px;
-            border: none;
-            padding: 10px;
-            font-size: 16px;
+            border-radius: 10px !important;
+            border: none !important;
+            padding: 10px !important;
+            font-size: 16px !important;
+        }
+        .stSuccess {
+            background-color: #145A32 !important;
+            color: #D4EDDA !important;
+            padding: 10px !important;
+            border-radius: 5px !important;
+            font-weight: bold !important;
+        }
+        .stInfo {
+            background-color: #1A5276 !important;
+            color: #D6EAF8 !important;
+            padding: 10px !important;
+            border-radius: 5px !important;
+            font-weight: bold !important;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # Faixas etárias e pontuação conforme Anexo VI da NSCA 54-3
 tabela_cintura = {
