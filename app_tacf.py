@@ -11,6 +11,15 @@ st.markdown(
             background-color: #ffffff;
             color: black;
         }
+        .stTextInput>div>div>input, 
+        .stNumberInput>div>div>input, 
+        .stSelectbox>div>div>div {
+            color: black !important;
+            background-color: white !important;
+            border: 1px solid #ccc !important;
+            border-radius: 5px !important;
+            padding: 5px !important;
+        }
         .stButton>button {
             color: white !important;
             background-color: #007BFF !important;
@@ -18,10 +27,6 @@ st.markdown(
             border: none;
             padding: 10px;
             font-size: 16px;
-        }
-        input {
-            color: black !important;
-            background-color: white !important;
         }
     </style>
     """,
