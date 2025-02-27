@@ -27,27 +27,6 @@ def set_theme():
 st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
 st.title("Calculadora TACF - FAB")
 
-# Botão de tema abaixo do título
-tema_selecionado = set_theme()
-
-st.write("Pontuação baseada na Tabela de Pontos do Anexo VI da NSCA 54-3 de 2025")
-st.markdown("[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)")
-
-# Entradas do usuário
-sexo = st.selectbox("Sexo", ["M", "F"])
-idade = st.number_input("Idade", min_value=20, max_value=49, step=1)
-cintura = st.number_input("Medição da Cintura (cm)", min_value=50.0, max_value=150.0, step=0.1)
-flexao_braco = st.number_input("Flexão de Braço", min_value=0, max_value=100, step=1)
-flexao_tronco = st.number_input("Flexão de Tronco", min_value=0, max_value=100, step=1)
-corrida = st.number_input("Distância Corrida (m)", min_value=0, max_value=5000, step=10)
-
-# Botão de cálculo
-if st.button("Calcular"):
-    grau_final, conceito_global = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
-    st.write(f"**Grau Final:** {grau_final:.2f}")
-    st.write(f"**Conceito Global:** {conceito_global}")
-    st.markdown("## VOCÊ LUTA COMO TREINOU!  SELVA BRASIL!")
-
 # Função para calcular o TACF
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
     tabela_cintura = {
@@ -94,3 +73,24 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
     conceito_global = next(v for k, v in conceito_tabela.items() if k[0] <= grau_final < k[1])
     
     return grau_final, conceito_global
+
+# Botão de tema abaixo do título
+tema_selecionado = set_theme()
+
+st.write("Pontuação baseada na Tabela de Pontos do Anexo VI da NSCA 54-3 de 2025")
+st.markdown("[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)")
+
+# Entradas do usuário
+sexo = st.selectbox("Sexo", ["M", "F"])
+idade = st.number_input("Idade", min_value=20, max_value=49, step=1)
+cintura = st.number_input("Medição da Cintura (cm)", min_value=50.0, max_value=150.0, step=0.1)
+flexao_braco = st.number_input("Flexão de Braço", min_value=0, max_value=100, step=1)
+flexao_tronco = st.number_input("Flexão de Tronco", min_value=0, max_value=100, step=1)
+corrida = st.number_input("Distância Corrida (m)", min_value=0, max_value=5000, step=10)
+
+# Botão de cálculo
+if st.button("Calcular"):
+    grau_final, conceito_global = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
+    st.write(f"**Grau Final:** {grau_final:.2f}")
+    st.write(f"**Conceito Global:** {conceito_global}")
+    st.markdown("## VOCÊ LUTA COMO TREINOU!  SELVA BRASIL!")
