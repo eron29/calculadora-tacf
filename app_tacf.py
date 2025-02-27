@@ -11,6 +11,10 @@ st.markdown(
             background-color: #121212;
             color: white;
         }
+        /* Ajustando cor do texto dos labels */
+        label, .stSelectbox label, .stNumberInput label, .stTextInput label {
+            color: white !important;
+        }
         .stTextInput>div>div>input, 
         .stNumberInput>div>div>input, 
         .stSelectbox>div>div>div {
@@ -46,6 +50,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 # Faixas etárias e pontuação conforme Anexo VI da NSCA 54-3
