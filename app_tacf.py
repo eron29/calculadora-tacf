@@ -52,7 +52,12 @@ tabela_flexao_braco = {
 tabela_flexao_tronco = tabela_flexao_braco
 tabela_corrida = tabela_flexao_braco
 
-# Função para calcular os pontos de acordo com a tabela
+def get_pontos_cintura(tabela, sexo, valor):
+    for limite, pontos in tabela[sexo]:
+        if valor <= limite:
+            return pontos
+    return 0
+
 def get_pontos(tabela, idade, sexo, valor):
     for (min_idade, max_idade), pontuacoes in tabela.items():
         if min_idade <= idade <= max_idade:
@@ -61,9 +66,8 @@ def get_pontos(tabela, idade, sexo, valor):
                     return pontos
     return 0
 
-# Cálculo do Grau Final conforme a pontuação obtida
 def calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida):
-    pontos_cintura = get_pontos(tabela_cintura, idade, sexo, cintura)
+    pontos_cintura = get_pontos_cintura(tabela_cintura, sexo, cintura)
     pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
     pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
     pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
@@ -72,12 +76,10 @@ def calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida):
 
     return grau_final
 
-# Interface do Streamlit
 st.title("Calculadora TACF - FAB")
 st.write("Pontuação baseada na Tabela do Anexo VI da NSCA 54-3.")
 st.markdown("[Baixar NSCA 54-3](https://www.sislaer.fab.mil.br/terminalcendoc/Busca/Download?codigoArquivo=4678)", unsafe_allow_html=True)
 
-# Formulário para entrada de dados
 with st.form("tacf_form"):
     sexo = st.selectbox("Sexo", ["M", "F"])
     idade = st.number_input("Idade", min_value=20, max_value=53, step=1)
@@ -89,9 +91,5 @@ with st.form("tacf_form"):
 
 if submit:
     grau_final = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
-    
-    # Exibir resultado
     st.success(f"**Grau Final:** {grau_final:.2f}")
-
-    # Frase motivacional
     st.markdown("### **Você luta como treina!** 💪🔥")
