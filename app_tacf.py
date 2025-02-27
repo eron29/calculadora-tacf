@@ -1,5 +1,6 @@
 import streamlit as st
 
+# Função para calcular o TACF
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
     """
     Calcula o Conceito Global do TACF de acordo com a Tabela de Pontos do Anexo VI da NSCA 54-3 (2024).
@@ -63,8 +64,22 @@ def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flex
         "Conceito Global": conceito_global
     }
 
+# Interface do Streamlit
 st.title("Calculadora TACF - NSCA 54-3 (2024)")
 st.write("Pontuação baseada na Tabela de Pontos do Anexo VI")
+
+sexo = st.selectbox("Sexo", ["M", "F"])
+idade = st.number_input("Idade", min_value=20, max_value=49, step=1)
+cintura = st.number_input("Medição da Cintura (cm)", min_value=50.0, max_value=150.0, step=0.1)
+flexao_braco = st.number_input("Flexão de Braço", min_value=0, max_value=100, step=1)
+flexao_tronco = st.number_input("Flexão de Tronco", min_value=0, max_value=100, step=1)
+corrida = st.number_input("Distância Corrida (m)", min_value=0, max_value=5000, step=10)
+
+if st.button("Calcular"):
+    resultado = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
+    st.write("### Resultados")
+    for chave, valor in resultado.items():
+        st.write(f"**{chave}:** {valor}")
 
 if "contador" not in st.session_state:
     st.session_state["contador"] = 0
