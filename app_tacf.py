@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import os
 
 # Configuração do tema claro
 st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
@@ -34,24 +33,44 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Tabela de conceitos globais com os intervalos do Grau Final
-conceitos_df = pd.DataFrame({
-    "Grau Final": ["9.0 - 10.0", "7.0 - 8.9", "5.0 - 6.9", "3.0 - 4.9", "0.0 - 2.9"],
-    "Conceito Global": ["Excelente (E)", "Muito Bom (MB)", "Bom (B)", "Satisfatório (S)", "Insatisfatório (I)"]
-})
+# Faixas etárias e pontuação conforme Anexo VI da NSCA 54-3
+tabela_cintura = {
+    "M": [(85, 10), (90, 8), (95, 6), (100, 4), (float("inf"), 2)],
+    "F": [(70, 10), (75, 8), (80, 6), (85, 4), (float("inf"), 2)]
+}
 
-# Função para determinar o conceito global baseado no Grau Final
-def determinar_conceito(grau_final):
-    if grau_final >= 9.0:
-        return "Excelente (E)"
-    elif grau_final >= 7.0:
-        return "Muito Bom (MB)"
-    elif grau_final >= 5.0:
-        return "Bom (B)"
-    elif grau_final >= 3.0:
-        return "Satisfatório (S)"
-    else:
-        return "Insatisfatório (I)"
+tabela_flexao_braco = {
+    (20, 24): {"M": [(50, 10), (45, 9), (40, 8), (35, 7), (30, 6), (0, 4)], "F": [(40, 10), (35, 9), (30, 8), (25, 7), (20, 6), (0, 4)]},
+    (25, 29): {"M": [(48, 10), (43, 9), (38, 8), (33, 7), (28, 6), (0, 4)], "F": [(38, 10), (33, 9), (28, 8), (23, 7), (18, 6), (0, 4)]},
+    (30, 34): {"M": [(45, 10), (40, 9), (35, 8), (30, 7), (25, 6), (0, 4)], "F": [(35, 10), (30, 9), (25, 8), (20, 7), (15, 6), (0, 4)]},
+    (35, 39): {"M": [(42, 10), (37, 9), (32, 8), (27, 7), (22, 6), (0, 4)], "F": [(32, 10), (27, 9), (22, 8), (17, 7), (12, 6), (0, 4)]},
+    (40, 44): {"M": [(40, 10), (35, 9), (30, 8), (25, 7), (20, 6), (0, 4)], "F": [(30, 10), (25, 9), (20, 8), (15, 7), (10, 6), (0, 4)]},
+    (45, 49): {"M": [(38, 10), (33, 9), (28, 8), (23, 7), (18, 6), (0, 4)], "F": [(28, 10), (23, 9), (18, 8), (13, 7), (8, 6), (0, 4)]},
+    (50, 53): {"M": [(35, 10), (30, 9), (25, 8), (20, 7), (15, 6), (0, 4)], "F": [(25, 10), (20, 9), (15, 8), (10, 7), (5, 6), (0, 4)]}
+}
+
+tabela_flexao_tronco = tabela_flexao_braco
+tabela_corrida = tabela_flexao_braco
+
+# Função para calcular os pontos de acordo com a tabela
+def get_pontos(tabela, idade, sexo, valor):
+    for (min_idade, max_idade), pontuacoes in tabela.items():
+        if min_idade <= idade <= max_idade:
+            for limite, pontos in pontuacoes[sexo]:
+                if valor >= limite:
+                    return pontos
+    return 0
+
+# Cálculo do Grau Final conforme a pontuação obtida
+def calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida):
+    pontos_cintura = get_pontos(tabela_cintura, idade, sexo, cintura)
+    pontos_flexao_braco = get_pontos(tabela_flexao_braco, idade, sexo, flexao_braco)
+    pontos_flexao_tronco = get_pontos(tabela_flexao_tronco, idade, sexo, flexao_tronco)
+    pontos_corrida = get_pontos(tabela_corrida, idade, sexo, corrida)
+
+    grau_final = round((pontos_cintura + pontos_flexao_braco + pontos_flexao_tronco + pontos_corrida) / 4, 2)
+
+    return grau_final
 
 # Interface do Streamlit
 st.title("Calculadora TACF - FAB")
@@ -69,16 +88,10 @@ with st.form("tacf_form"):
     submit = st.form_submit_button("Calcular")
 
 if submit:
-    # Simulação do cálculo do Grau Final (trocar por sua lógica real)
-    grau_final = round((cintura * 0.1 + flexao_braco * 0.2 + flexao_tronco * 0.2 + corrida * 0.1) / 4, 2)
-    conceito_global = determinar_conceito(grau_final)
-
+    grau_final = calcular_tacf(sexo, idade, cintura, flexao_braco, flexao_tronco, corrida)
+    
+    # Exibir resultado
     st.success(f"**Grau Final:** {grau_final:.2f}")
-    st.info(f"**Conceito Global:** {conceito_global}")
 
     # Frase motivacional
     st.markdown("### **Você luta como treina!** 💪🔥")
-
-    # Exibir tabela com os intervalos de Grau Final e Conceito Global
-    st.write("### Tabela de Conceitos Globais")
-    st.dataframe(conceitos_df, hide_index=True)
