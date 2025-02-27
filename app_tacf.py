@@ -2,10 +2,21 @@ import streamlit as st
 
 # Configuração do tema escuro
 st.set_page_config(page_title="Calculadora TACF - FAB", page_icon="✈", layout="centered")
-st.markdown(
-  
-    unsafe_allow_html=True
-)
+st.markdown("""
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        .stButton>button {
+            color: white;
+            background-color: #6200ea;
+        }
+        .stNumberInput>div>input {
+            color: black;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Função para calcular o TACF
 def calcular_tacf(sexo: str, idade: int, cintura: float, flexao_braco: int, flexao_tronco: int, corrida: int):
